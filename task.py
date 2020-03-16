@@ -49,12 +49,38 @@ def extractTime(line, list):
     list.append(round(seconds, 3))
     # Due to inaccuracy of float, sometimes 3e-17 was added.
 
-def main():
-    print('Hello')
+def analyzeTime(list):
+    num = len(list)
+    total = 0.0
+    mean = 0.0
+    variance_numerator = 0.0
+    std_dev = 0.0
 
+    for i in range(len(list)):
+        total += list[i]
+
+    mean = total / num
+    mean = round(mean, 3)
+
+    for i in range(len(list)):
+        variance_numerator += (list[i] - mean)**2
+
+    std_dev = (variance_numerator / num)**(0.5)
+    std_dev = round(std_dev, 3)
+
+    count = 0
+    for i in range(len(list)):
+        if (list[i] >= mean - std_dev) and (list[i] <= mean + std_dev):
+            count += 1
+
+    return (mean, std_dev, count)
+
+
+def main():
     real = []
     user = []
     sys = []
+
     with open('timestat.txt', 'r') as timestat_data:
         for line in timestat_data:
             if line[0] == 'r':
@@ -63,9 +89,26 @@ def main():
                 extractTimeExtensive(line, user)
             elif line[0] == 's':
                 extractTimeExtensive(line, sys)
-    print(real)
-    print(sys)
-    print(user)
+
+    no_of_runs = len(real)
+
+    real = analyzeTime(real)
+    user = analyzeTime(user)
+    sys = analyzeTime(sys)
+
+    print("Total number of runs: " + str(no_of_runs))
+    print("\nAverage Time Statistics:")
+    print("real " + str(real[0]) + "s")
+    print("user " + str(user[0]) + "s")
+    print("sys  " + str(sys[0]) + "s")
+    print("\nStandard deviation of Time statistics:")
+    print("real " + str(real[1]) + "s")
+    print("user " + str(user[1]) + "s")
+    print("sys  " + str(sys[1]) + "s")
+    print("\nNumber of runs within average - standard deviation to average + standard deviation:")
+    print("real " + str(real[2]))
+    print("user " + str(user[2]))
+    print("sys  " + str(sys[2]))
 
 if __name__ == '__main__':
     main()

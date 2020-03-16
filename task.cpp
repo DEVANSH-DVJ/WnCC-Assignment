@@ -1,9 +1,16 @@
+#include <cmath>
 #include <fstream>
 #include <iostream>
 
 using namespace std;
 
-void extractTime(string line, float list[100], int &index) {
+// This function rounds off upto three decimal places.
+float round(float x) {
+  float var = (int)(x * 1000 + .5);
+  return (float)var / 1000;
+}
+
+void extractTime(string line, float *list, int &index) {
   int minutes = 0, milliseconds = 0;
   float seconds = 0;
   bool min = true;
@@ -24,7 +31,6 @@ void extractTime(string line, float list[100], int &index) {
     }
   }
   seconds = (minutes * 60) + (float(milliseconds) / 1000);
-  cout << seconds << endl;
 
   list[index] = seconds;
   index++;
@@ -32,9 +38,33 @@ void extractTime(string line, float list[100], int &index) {
   return;
 }
 
-int main() {
-  cout << "Hello\n";
+int analyzeTime(float *list, int n, float &mean, float &std_dev) {
+  float total = 0.0;
+  float variance_numerator = 0.0;
+  mean = 0.0;
+  std_dev = 0.0;
 
+  for (int i = 0; i < n; i++)
+    total += list[i];
+
+  mean = float(total) / n;
+  mean = round(mean);
+
+  for (int i = 0; i < n; i++)
+    variance_numerator += (list[i] - mean) * (list[i] - mean);
+
+  std_dev = sqrt(variance_numerator / n);
+  std_dev = round(std_dev);
+
+  int count = 0;
+  for (int i = 0; i < n; i++)
+    if ((list[i] >= mean - std_dev) && (list[i] <= mean + std_dev))
+      count += 1;
+
+  return count;
+}
+
+int main() {
   fstream file("timestat.txt", ios::in);
 
   if (!file.is_open()) {
@@ -53,6 +83,31 @@ int main() {
     else if (line[0] == 115)
       extractTime(line, sys, sys_count);
   }
+
+  int no_of_runs = real_count;
+
+  int count[3];
+  float mean[3], std_dev[3];
+
+  count[0] = analyzeTime(real, no_of_runs, mean[0], std_dev[0]);
+  count[1] = analyzeTime(user, no_of_runs, mean[1], std_dev[1]);
+  count[2] = analyzeTime(sys, no_of_runs, mean[2], std_dev[2]);
+
+  cout << "Total number of runs: " << no_of_runs;
+  cout << "\n\nAverage Time Statistics:";
+  cout << "\nreal " << mean[0] << "s";
+  cout << "\nuser " << mean[1] << "s";
+  cout << "\nsys  " << mean[2] << "s";
+  cout << "\n\nStandard deviation of Time statistics:";
+  cout << "\nreal " << std_dev[0] << "s";
+  cout << "\nuser " << std_dev[1] << "s";
+  cout << "\nsys  " << std_dev[2] << "s";
+  cout << "\n\nNumber of runs within average - standard deviation to"
+          "average + standard deviation:";
+  cout << "\nreal " << count[0];
+  cout << "\nuser " << count[1];
+  cout << "\nsys  " << count[2];
+  cout << endl;
 
   return 0;
 }
