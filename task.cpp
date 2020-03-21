@@ -4,7 +4,15 @@
 
 using namespace std;
 
+/*
+  Basic Algorithm:
+   1. Read necessary lines as string.
+   2. Extract the time in that line as seconds and store it in a integer array.
+   3. Evaluate the lists to get the required results.
+*/
+
 // This function rounds off upto three decimal places.
+// It is being called due to inaccuracy of float (trailing decimal places might not be zero).
 float round(float x) {
   float var = (int)(x * 1000 + .5);
   return (float)var / 1000;
@@ -102,7 +110,7 @@ int main() {
   cout << "\nreal " << std_dev[0] << "s";
   cout << "\nuser " << std_dev[1] << "s";
   cout << "\nsys  " << std_dev[2] << "s";
-  cout << "\n\nNumber of runs within average - standard deviation to"
+  cout << "\n\nNumber of runs within average - standard deviation to "
           "average + standard deviation:";
   cout << "\nreal " << count[0];
   cout << "\nuser " << count[1];

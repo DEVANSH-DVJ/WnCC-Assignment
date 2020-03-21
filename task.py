@@ -1,4 +1,19 @@
+'''
+    Works both for python2 and python3.
+    Basic Algorithm:
+     1. Read necessary lines as string(char array)
+     2. Extract the time in that line as seconds and store it in a list.
+     3. Evaluate the lists to get the required results.
+
+    Functions 'extractTimeExtensive' and 'extractTime' have the same purpose.
+     However, the former is slower but safer as trailing spaces wouldn't cause an issue.
+
+    Pre-defined function round is being used,
+     due to inaccuracy of float (trailing decimal places might not be zero).
+'''
+
 def extractTimeExtensive(line, list):
+		
     minutes = 0
     milliseconds = 0
 
@@ -21,9 +36,7 @@ def extractTimeExtensive(line, list):
 
     seconds = (minutes * 60) + (milliseconds / 1000)
     list.append(round(seconds, 3))
-    # Due to inaccuracy of float, trailing decimal places might not be zero.
 
-# Trailing spaces would cause wrong problems, but it is faster.
 def extractTime(line, list):
     seconds = 0
     factor = 0.001
@@ -47,7 +60,6 @@ def extractTime(line, list):
             seconds += float(line[i]) * factor
             factor *= 10
     list.append(round(seconds, 3))
-    # Due to inaccuracy of float, sometimes 3e-17 was added.
 
 def analyzeTime(list):
     num = len(list)
@@ -74,7 +86,6 @@ def analyzeTime(list):
             count += 1
 
     return (mean, std_dev, count)
-
 
 def main():
     real = []
