@@ -5,6 +5,7 @@
 using namespace std;
 
 /*
+  Task : "Time Is All I Have"
   Basic Algorithm:
    1. Read necessary lines as string.
    2. Extract the time in that line as seconds and store it in a integer array.

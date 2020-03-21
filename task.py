@@ -1,5 +1,7 @@
 '''
     Works both for python2 and python3.
+
+    Task : "Time Is All I Have"
     Basic Algorithm:
      1. Read necessary lines as string(char array)
      2. Extract the time in that line as seconds and store it in a list.
@@ -13,7 +15,6 @@
 '''
 
 def extractTimeExtensive(line, list):
-		
     minutes = 0
     milliseconds = 0
 
